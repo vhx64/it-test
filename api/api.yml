@@ -1,0 +1,268 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: IT-Test
+  description: The API of the IT-test service
+servers:
+  - url: http://localhost:8080/api/v1/it-test
+    description: localhost server
+paths:
+  /count:
+    get:
+      tags: [ "user" ]
+      operationId: count
+      responses:
+        '200':
+          description: get user count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: resource not found
+        '500':
+          description: internal server error
+  /user:
+    post:
+      tags: [ "user" ]
+      operationId: PostUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '200':
+          description: create user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: resource not found
+        '500':
+          description: internal server error
+  /user/{id}:
+    put:
+      tags: [ "user" ]
+      operationId: UpdateUserDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '200':
+          description: details of user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: resource not found
+        '500':
+          description: internal server error
+  /user/list:
+    get:
+      tags: [ "user" ]
+      operationId: GetUserList
+      parameters:
+        - name: emailFilter
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/pageIndex'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/orderBy'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+        '500':
+          description: internal server error
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+
+components:
+  schemas:
+    Count:
+      type: object
+      properties:
+        count:
+          type: integer
+    UpdateUser:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - userName
+        - password
+        - passwordCheck
+        - mobile
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        userName:
+          type: string
+        password:
+          type: string
+        passwordCheck:
+          type: string
+        mobile:
+          type: string
+    CreateUser:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - userName
+        - email
+        - password
+        - passwordCheck
+        - mobile
+        - aszf
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        passwordCheck:
+          type: string
+        mobile:
+          type: string
+        aszf:
+          type: boolean
+    GetUser:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - userName
+        - email
+        - mobile
+        - aszf
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        mobile:
+          type: string
+        aszf:
+          type: boolean
+    UserList:
+      type: object
+      required:
+        - resultsLength
+        - results
+      properties:
+        resultsLength:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserListItem'
+    UserListItem:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - userName
+        - email
+        - mobile
+        - aszf
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        passwordCheck:
+          type: string
+        mobile:
+          type: string
+        aszf:
+          type: boolean
+  parameters:
+    pageIndex:
+      in: query
+      name: pageIndex
+      schema:
+        type: integer
+      example: 1
+      required: true
+      x-oapi-codegen-extra-tags:
+        validate: gte=0
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+      x-oapi-codegen-extra-tags:
+        validate: gte=0,lte=100
+      example: 10
+      required: true
+    orderBy:
+      in: query
+      name: orderBy
+      schema:
+        type: string
+      example: "createdAt"
+      required: true
+    order:
+      in: query
+      name: order
+      schema:
+        type: string
+      example: "DESC"
+      required: true

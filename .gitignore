@@ -1,0 +1,16 @@
+app.env
+vendor/
+
+.DS_Store
+.vscode
+www/dist/
+www/.DS_Store
+www/node_modules
+npm-debug.log
+.data
+.idea/
+cover.out
+cover.html
+bin
+data
+.run/

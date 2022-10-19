@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  psql:
+    image: postgres:9.6
+    container_name: it-test
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: it
+      POSTGRES_PASSWORD: it
+      POSTGRES_DB: it
+    volumes:
+      - ./data:/var/lib/postgresql
