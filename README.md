@@ -81,5 +81,57 @@ $ make migrate-down
 
 ```bash
 $ go run main.go server
-``` 
- 
+```
+
+### Example API requests
+
+```bash
+# count
+curl "http://127.0.0.1:8080/api/v1/it-test/count"
+
+# list
+curl "http://127.0.0.1:8080/api/v1/it-test/user/list?pageIndex=0&limit=2&orderBy=id&order=asc"
+
+# create fail
+cat << EOT > /tmp/create_user.json
+{
+  "aszf": true,
+  "email": "test@test.com",
+  "firstName": "Test",
+  "lastName": "Test",
+  "mobile": "06201234567",
+  "password": "kisnyuszi",
+  "passwordCheck": "a",
+  "userName": "Test"
+}
+EOT
+curl -X POST -d @/tmp/create_user.json "http://127.0.0.1:8080/api/v1/it-test/user"
+
+# create ok
+cat << EOT > /tmp/create_user.json
+{
+  "aszf": true,
+  "email": "test@test.com",
+  "firstName": "Test",
+  "lastName": "Test",
+  "mobile": "06201234567",
+  "password": "kisnyuszi",
+  "passwordCheck": "kisnyuszi",
+  "userName": "Test"
+}
+EOT
+curl -X POST -d @/tmp/create_user.json "http://127.0.0.1:8080/api/v1/it-test/user"
+
+# update ok
+cat << EOT > /tmp/update_user.json
+{
+  "firstName": "Test2",
+  "lastName": "Test2",
+  "mobile": "06301234567",
+  "password": "kisnyuszi2",
+  "passwordCheck": "kisnyuszi2",
+  "userName": "Test2"
+}
+EOT
+curl -X PUT -d @/tmp/update_user.json "http://127.0.0.1:8080/api/v1/it-test/user/cb3f0e3b-8de2-49b1-bfea-784c798a4b8e"
+```
